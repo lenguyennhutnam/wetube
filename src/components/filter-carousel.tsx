@@ -72,16 +72,16 @@ export const FilterCarousel = ({
             >
               <Badge
                 variant={!value ? "default" : "secondary"}
-                className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
+                className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm select-none"
               >
-                All
+                Tất cả
               </Badge>
             </CarouselItem>
           )}
           {isLoading &&
             Array.from({ length: 14 }).map((_, index) => (
               <CarouselItem key={index} className="pl-3 basis-auto">
-                <Skeleton className="rounded-lg px-3 py-1 h-full text-sm w-[100px] font-semibold">
+                <Skeleton className="rounded-lg px-3 py-1 h-full text-sm w-[100px] font-semibold select-none">
                   &nbsp;
                 </Skeleton>
               </CarouselItem>
@@ -95,7 +95,7 @@ export const FilterCarousel = ({
               >
                 <Badge
                   variant={value === item.value ? "default" : "secondary"}
-                  className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
+                  className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm select-none"
                 >
                   {item.label}
                 </Badge>
