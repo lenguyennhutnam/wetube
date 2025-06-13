@@ -14,18 +14,18 @@ import {
 
 const items = [
   {
-    title: "Home",
+    title: "Trang chủ",
     url: "/",
     icon: HomeIcon,
   },
   {
-    title: "Subscriptions",
+    title: "Theo dõi",
     url: "/feed/subscriptions",
     icon: PlaySquareIcon,
     auth: true,
   },
   {
-    title: "Trending",
+    title: "Nổi bật",
     url: "/feed/trending",
     icon: FlameIcon,
   },

@@ -28,14 +28,14 @@ export const StudioSidebarHeader = () => {
   if (state === "collapsed") {
     return (
       <SidebarMenuItem>
-        <SidebarMenuButton tooltip="Your profile" asChild>
+        <SidebarMenuButton tooltip="Hồ sơ của bạn" asChild>
           <Link href="/users/current">
             <UserAvatar
               imageUrl={user.imageUrl}
               name={user.fullName ?? "User"}
               size="xs"
             />
-            <span className="text-sm">Your profile</span>
+            <span className="text-sm">Hồ sơ của bạn</span>
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -51,7 +51,7 @@ export const StudioSidebarHeader = () => {
         />
       </Link>
       <div className="flex flex-col items-center mt-2 gap-y-1">
-        <p className="text-sm font-medium">Your profile</p>
+        <p className="text-sm font-medium">Hồ sơ của bạn</p>
         <p className="text-xs text-muted-foreground">{user.fullName}</p>
       </div>
     </SidebarHeader>

@@ -26,21 +26,21 @@ export const StudioSidebar = () => {
             <SidebarMenuItem>
               <SidebarMenuButton
                 isActive={pathname === "/studio"}
-                tooltip={"Content"}
+                tooltip={"Nội dung"}
                 asChild
               >
                 <Link href={"/studio/videos"}>
                   <VideoIcon className="size-5" />
-                  <span className="text-sm">Content</span>
+                  <span className="text-sm">Nội dung</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <Separator />
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={"Exit studio"} asChild>
+              <SidebarMenuButton tooltip={"Thoát studio"} asChild>
                 <Link href={"/"}>
                   <LogOutIcon className="size-5" />
-                  <span className="text-sm">Exit studio</span>
+                  <span className="text-sm">Thoát studio</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
