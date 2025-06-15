@@ -51,6 +51,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { THUMBNAIL_FAILBACK } from "@/modules/videos/constants";
 import { ThumbnailUploadModal } from "@/components/thumbnail-upload-modal";
+import { APP_URL } from "@/constants";
 
 interface FormSectionProps {
   videoId: string;
@@ -100,6 +101,17 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     },
   });
 
+  const revalidate = trpc.videos.remove.useMutation({
+    onSuccess: () => {
+      utils.studio.getMany.invalidate();
+      utils.studio.getOne.invalidate({ id: videoId });
+      toast.success("Revalidated");
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra");
+    },
+  });
+
   const generateThumbnail = trpc.videos.restoreThumbnail.useMutation({
     onSuccess: () => {
       toast.success("Đang bắt đầu sinh ảnh", {
@@ -131,9 +143,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     update.mutate(data);
   };
 
-  const fullUrl = `${
-    process.env.VERCEL_URL || "http://localhost:3000"
-  }/videos/${videoId}`;
+  const fullUrl = `${APP_URL || "http://localhost:3000"}/videos/${videoId}`;
   const [isCopied, setIsCopied] = useState(false);
 
   const onCopy = async () => {
@@ -172,6 +182,13 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => revalidate.mutate({ id: videoId })}
+                    className="cursor-pointer"
+                  >
+                    <RotateCcwIcon className="size-4 mr-2" />
+                    Đồng bộ video từ Mux
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => remove.mutate({ id: videoId })}
                     className="cursor-pointer"
