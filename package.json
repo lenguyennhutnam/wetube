@@ -6,7 +6,7 @@
     "studio": "bunx drizzle-kit studio",
     "dev:all": "concurrently \"bun run dev:webhook\" \"bun run dev\" ",
     "dev": "next dev",
-    "dev:webhook": "ngrok http --url=bunny-humble-apparently.ngrok-free.app 3000",
+    "dev:webhook": "ngrok http --url=dragon-national-publicly.ngrok-free.app 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

@@ -21,6 +21,7 @@ import {
   CopyIcon,
   Globe2Icon,
   ImagePlusIcon,
+  Loader2Icon,
   LockIcon,
   MoreVerticalIcon,
   RotateCcwIcon,
@@ -106,6 +107,17 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
       utils.studio.getMany.invalidate();
       utils.studio.getOne.invalidate({ id: videoId });
       toast.success("Revalidated");
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra");
+    },
+  });
+
+  const generateTitle = trpc.videos.generateTitle.useMutation({
+    onSuccess: () => {
+      toast.success("Đang bắt đầu sinh tiêu đề", {
+        description: "Việc này cần một chút thời gian",
+      });
     },
     onError: () => {
       toast.error("Có lỗi xảy ra");
@@ -208,7 +220,27 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Tiêu đề</FormLabel>
+                      <FormLabel>
+                        <div className="flex items-center gap-x-2">
+                          Tiêu đề
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            type="button"
+                            className="rounded-full  size-6 [&_svg]:size-3"
+                            onClick={() =>
+                              generateTitle.mutate({ id: videoId })
+                            }
+                            disabled={generateTitle.isPending}
+                          >
+                            {generateTitle.isPending ? (
+                              <Loader2Icon className="animate-spin" />
+                            ) : (
+                              <SparklesIcon />
+                            )}
+                          </Button>
+                        </div>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -226,7 +258,27 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Miêu tả</FormLabel>
+                      <FormLabel>
+                        <div className="flex items-center gap-x-2">
+                          Mô tả
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            type="button"
+                            className="rounded-full  size-6 [&_svg]:size-3"
+                            onClick={() =>
+                              generateTitle.mutate({ id: videoId })
+                            }
+                            disabled={generateTitle.isPending}
+                          >
+                            {generateTitle.isPending ? (
+                              <Loader2Icon className="animate-spin" />
+                            ) : (
+                              <SparklesIcon />
+                            )}
+                          </Button>
+                        </div>
+                      </FormLabel>
                       <FormControl>
                         <Textarea
                           {...field}

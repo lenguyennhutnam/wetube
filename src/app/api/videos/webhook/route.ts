@@ -46,11 +46,10 @@ export const POST = async (request: Request) => {
   );
   switch (payload.type as WebhookEvent["type"]) {
     case "video.asset.created": {
-      const data = payload as VideoAssetCreatedWebhookEvent["data"];
+      const data = payload.data as VideoAssetCreatedWebhookEvent["data"];
       if (!data.upload_id) {
         return new Response("No upload ID found", { status: 400 });
       }
-
       await db
         .update(videos)
         .set({
@@ -133,15 +132,12 @@ export const POST = async (request: Request) => {
       const data = payload.data as VideoAssetTrackReadyWebhookEvent["data"] & {
         asset_id: string;
       };
-
       const assetId = data.asset_id;
       const trackId = data.id;
       const status = data.status;
-
       if (!assetId) {
         return new Response("Thiếu ID tải lên", { status: 400 });
       }
-
       await db
         .update(videos)
         .set({
