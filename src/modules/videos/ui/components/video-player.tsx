@@ -8,6 +8,11 @@ interface VideoPlayerProps {
   thumbnailUrl?: string | null | undefined;
   autoPlay?: boolean;
   onPlay?: () => void;
+  onTimeUpdate?: (e: React.SyntheticEvent<HTMLVideoElement>) => void;
+}
+
+export const VideoPlayerSkeleton = () => {
+  return <div className="aspect-video bg-black rounded-xl"/>
 }
 
 export const VideoPlayer = ({
@@ -15,11 +20,13 @@ export const VideoPlayer = ({
   thumbnailUrl,
   autoPlay,
   onPlay,
+  onTimeUpdate,
 }: VideoPlayerProps) => {
   // if (!playbackId) return null;
 
   return (
     <MuxPlayer
+      onTimeUpdate={onTimeUpdate}
       playbackId={playbackId || ""}
       poster={thumbnailUrl || THUMBNAIL_FAILBACK}
       playerInitTime={0}

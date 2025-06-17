@@ -157,13 +157,13 @@ export const VideosSectionSuspense = () => {
                       {format(new Date(video.createdAt), "dd/MM/yyyy")}
                     </TableCell>
                     <TableCell className="text-right text-sm">
-                      Lượt xem
+                      {video.viewCount}
                     </TableCell>
                     <TableCell className="text-right text-sm">
-                      Bình luận
+                      {video.viewCount}
                     </TableCell>
                     <TableCell className="text-right text-sm pr-6">
-                      Thích
+                      {video.likeCount}
                     </TableCell>
                   </TableRow>
                 </Link>

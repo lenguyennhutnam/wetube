@@ -2,14 +2,12 @@ import { db } from "@/db";
 import { videos } from "@/db/schema";
 import { serve } from "@upstash/workflow/nextjs";
 import { and, eq } from "drizzle-orm";
+import { TITLE_SYSTEM_PROMPT } from "../../../../../../public/system_prompts";
 
 interface InputType {
   userId: string;
   videoId: string;
 }
-
-const TITLE_SYSTEM_PROMPT =
-  "Your task is to generate an SEO-focused title for a YouTube video based on its transcript. Please follow these guidelines: TITLE_SYSTEM_PROMPT is assigned to: - Be concise but descriptive, using relevant keywords to improve discoverability. - Highlight the most compelling or unique aspect of the video content. - Avoid jargon or overly complex language unless it directly supports searchability. - Use action-oriented phrasing or clear value propositions where applicable. - Ensure the title is 3-8 words long and no more than 100 characters. - ONLY return the title as plain text. Do not add quotes or any additional formatting.";
 
 export const { POST } = serve(async (context) => {
   const input = context.requestPayload as InputType;
@@ -30,9 +28,8 @@ export const { POST } = serve(async (context) => {
 
   const transcript = await context.run("get-transcript", async () => {
     const trackUrl = `https://stream.mux.com/${video.muxPlaybackId}/text/${video.muxTrackId}.txt`;
-    console.log(trackUrl);
     const response = await fetch(trackUrl);
-    const text = response.text();
+    const text = await response.text();
 
     if (!text) throw new Error("Bad request");
 
@@ -58,7 +55,8 @@ export const { POST } = serve(async (context) => {
   });
 
   const title = body.choices[0]?.message.content;
-
+  console.log("RAW TITLE:", title);
+  console.log("JSON TITLE:", JSON.stringify(title));
   if (!title) throw new Error("Bad request");
 
   await context.run("update-video", async () => {
@@ -66,9 +64,5 @@ export const { POST } = serve(async (context) => {
       .update(videos)
       .set({ title: title?.replace(`""`, "") || video.title })
       .where(and(eq(videos.id, video.id), eq(videos.userId, video.userId)));
-  });
-
-  await context.run("second-step", () => {
-    console.log("second step ran");
   });
 });

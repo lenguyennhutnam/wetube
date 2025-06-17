@@ -20,7 +20,7 @@ const items = [
   },
   {
     title: "Theo dõi",
-    url: "/feed/subscriptions",
+    url: "/feed/subscribed",
     icon: PlaySquareIcon,
     auth: true,
   },

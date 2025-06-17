@@ -16,13 +16,13 @@ import { useAuth, useClerk } from "@clerk/nextjs";
 const items = [
   {
     title: "Lịch sử",
-    url: "/playlist/history",
+    url: "/playlists/history",
     icon: HistoryIcon,
     auth: true,
   },
   {
     title: "Video đã thích",
-    url: "/playlist/liked",
+    url: "/playlists/liked",
     icon: ThumbsUpIcon,
     auth: true,
   },

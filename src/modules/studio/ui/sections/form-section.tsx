@@ -113,6 +113,17 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     },
   });
 
+  const generateDescription = trpc.videos.generateDescription.useMutation({
+    onSuccess: () => {
+      toast.success("Đang bắt đầu sinh tiêu đề", {
+        description: "Việc này cần một chút thời gian",
+      });
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra");
+    },
+  });
+
   const generateTitle = trpc.videos.generateTitle.useMutation({
     onSuccess: () => {
       toast.success("Đang bắt đầu sinh tiêu đề", {
@@ -231,7 +242,9 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                             onClick={() =>
                               generateTitle.mutate({ id: videoId })
                             }
-                            disabled={generateTitle.isPending}
+                            disabled={
+                              generateTitle.isPending || !video.muxTrackId
+                            }
                           >
                             {generateTitle.isPending ? (
                               <Loader2Icon className="animate-spin" />
@@ -267,11 +280,13 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                             type="button"
                             className="rounded-full  size-6 [&_svg]:size-3"
                             onClick={() =>
-                              generateTitle.mutate({ id: videoId })
+                              generateDescription.mutate({ id: videoId })
                             }
-                            disabled={generateTitle.isPending}
+                            disabled={
+                              generateDescription.isPending || !video.muxTrackId
+                            }
                           >
-                            {generateTitle.isPending ? (
+                            {generateDescription.isPending ? (
                               <Loader2Icon className="animate-spin" />
                             ) : (
                               <SparklesIcon />

@@ -47,7 +47,12 @@ export const searchRouter = createTRPCRouter({
         .where(
           and(
             eq(videos.visibility, "public"),
-            ilike(videos.title, `%${query}%`),
+            query
+              ? or(
+                  ilike(videos.title, `%${query}%`),
+                  ilike(videos.description, `%${query}%`)
+                )
+              : undefined,
             categoryId ? eq(videos.categoryId, categoryId) : undefined,
             cursor
               ? or(

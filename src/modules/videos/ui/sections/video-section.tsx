@@ -2,13 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { VideoPlayer } from "../components/video-player";
+import { VideoPlayer, VideoPlayerSkeleton } from "../components/video-player";
 import { VideoBanner } from "../components/video-banner";
-import { VideoTopRow } from "../components/video-top-row";
+import { VideoTopRow, VideoTopRowSkeleton } from "../components/video-top-row";
 import { useAuth } from "@clerk/nextjs";
-import { Skeleton } from "@/components/ui/skeleton";
+import { MIN_VIEW_COUNT } from "@/constants";
 
 interface VideoSectionProps {
   videoId: string;
@@ -16,7 +16,7 @@ interface VideoSectionProps {
 
 export const VideoSection = ({ videoId }: VideoSectionProps) => {
   return (
-    <Suspense fallback={<Skeleton className="h-1/2 w-full" />}>
+    <Suspense fallback={<VideoSectionSkeleton />}>
       <ErrorBoundary fallback={<p>Error</p>}>
         <VideoSectionSuspense videoId={videoId} />
       </ErrorBoundary>
@@ -24,7 +24,17 @@ export const VideoSection = ({ videoId }: VideoSectionProps) => {
   );
 };
 
+const VideoSectionSkeleton = () => {
+  return (
+    <>
+      <VideoPlayerSkeleton />
+      <VideoTopRowSkeleton />
+    </>
+  );
+};
+
 const VideoSectionSuspense = ({ videoId }: VideoSectionProps) => {
+  const [viewed, setViewed] = useState(false);
   const { isSignedIn } = useAuth();
 
   const utils = trpc.useUtils();
@@ -37,10 +47,18 @@ const VideoSectionSuspense = ({ videoId }: VideoSectionProps) => {
     },
   });
 
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const currentTime = e.currentTarget.currentTime;
+    if (currentTime >= MIN_VIEW_COUNT && !viewed) {
+      setViewed(true);
+      createView.mutate({ videoId });
+    }
+  };
+
   const handlePlay = () => {
     if (!isSignedIn) return;
 
-    createView.mutate({ videoId });
+    // createView.mutate({ videoId });
   };
 
   return (
@@ -53,6 +71,7 @@ const VideoSectionSuspense = ({ videoId }: VideoSectionProps) => {
       >
         <VideoPlayer
           autoPlay
+          onTimeUpdate={handleTimeUpdate}
           onPlay={handlePlay}
           playbackId={video.muxPlaybackId}
           thumbnailUrl={video.thumbnailKey}

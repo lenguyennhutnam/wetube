@@ -20,6 +20,8 @@ export const useSubscription = ({
     onSuccess: () => {
       toast.success("Đã đăng ký");
 
+      utils.videos.getManySubscribed.invalidate();
+
       if (fromVideoId) {
         utils.videos.getOne.invalidate({ id: fromVideoId });
       }
