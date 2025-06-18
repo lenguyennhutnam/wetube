@@ -8,7 +8,7 @@ import { VideoPlayer, VideoPlayerSkeleton } from "../components/video-player";
 import { VideoBanner } from "../components/video-banner";
 import { VideoTopRow, VideoTopRowSkeleton } from "../components/video-top-row";
 import { useAuth } from "@clerk/nextjs";
-import { MIN_VIEW_COUNT } from "@/constants";
+import { MIN_TIME_VIEW_COUNT } from "@/constants";
 
 interface VideoSectionProps {
   videoId: string;
@@ -49,7 +49,7 @@ const VideoSectionSuspense = ({ videoId }: VideoSectionProps) => {
 
   const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const currentTime = e.currentTarget.currentTime;
-    if (currentTime >= MIN_VIEW_COUNT && !viewed) {
+    if (currentTime >= MIN_TIME_VIEW_COUNT && !viewed) {
       setViewed(true);
       createView.mutate({ videoId });
     }

@@ -160,7 +160,7 @@ export const VideosSectionSuspense = () => {
                       {video.viewCount}
                     </TableCell>
                     <TableCell className="text-right text-sm">
-                      {video.viewCount}
+                      {video.commentCount}
                     </TableCell>
                     <TableCell className="text-right text-sm pr-6">
                       {video.likeCount}

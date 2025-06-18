@@ -185,7 +185,7 @@ export const videoViews = pgTable(
   (t) => [
     primaryKey({
       name: "video_views_pk",
-      columns: [t.userId, t.videoId],
+      columns: [t.userId, t.videoId, t.createdAt],
     }),
   ]
 );

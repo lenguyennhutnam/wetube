@@ -1,23 +1,36 @@
 "use client";
 
 import { ClapperboardIcon, UserCircleIcon } from "lucide-react";
-import { UserButton, SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import {
+  UserButton,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  ClerkLoading,
+  ClerkLoaded,
+} from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 export const AuthButton = () => {
   return (
     <>
       <SignedIn>
-        <UserButton>
-          <UserButton.MenuItems>
-            <UserButton.Link
-              label="Studio"
-              href="/studio"
-              labelIcon={<ClapperboardIcon className="size-4" />}
-            />
-            <UserButton.Action label="manageAccount" />
-          </UserButton.MenuItems>
-        </UserButton>
+        <ClerkLoading>
+          {/* Loading skeleton */}
+          <div className="w-8 h-8 bg-gray-300 rounded-full animate-pulse" />
+        </ClerkLoading>
+        <ClerkLoaded>
+          <UserButton>
+            <UserButton.MenuItems>
+              <UserButton.Link
+                label="Studio"
+                href="/studio"
+                labelIcon={<ClapperboardIcon className="size-4" />}
+              />
+              <UserButton.Action label="manageAccount" />
+            </UserButton.MenuItems>
+          </UserButton>
+        </ClerkLoaded>
       </SignedIn>
       <SignedOut>
         <SignInButton mode="modal">

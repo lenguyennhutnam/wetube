@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { users, videoReactions, videos, videoViews } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { and, desc, eq, getTableColumns, lt, or } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, lt, max, or } from "drizzle-orm";
 import z from "zod";
 
 export const playlistsRouter = createTRPCRouter({
@@ -111,14 +111,16 @@ export const playlistsRouter = createTRPCRouter({
       const { id: userId } = ctx.user;
       const { cursor, limit } = input;
 
+      // CTE to get the latest view for each video by the user
       const viewerVideoViews = db.$with("viewer_video_views").as(
         db
           .select({
             videoId: videoViews.videoId,
-            viewedAt: videoViews.updatedAt,
+            viewedAt: max(videoViews.updatedAt).as("viewedAt"), // Lấy thời gian xem gần nhất
           })
           .from(videoViews)
           .where(eq(videoViews.userId, userId))
+          .groupBy(videoViews.videoId) // Group theo videoId để mỗi video chỉ có 1 bản ghi
       );
 
       const data = await db
@@ -160,7 +162,7 @@ export const playlistsRouter = createTRPCRouter({
               : undefined
           )
         )
-        .orderBy(desc(viewerVideoViews.videoId), desc(videos.id))
+        .orderBy(desc(viewerVideoViews.viewedAt), desc(videos.id)) // Sắp xếp theo thời gian xem gần nhất
         .limit(limit + 1);
 
       const hasMore = data.length > limit;
